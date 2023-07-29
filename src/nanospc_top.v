@@ -1,7 +1,7 @@
 
 // Play SPC music through HDMI
 
-module spcplayer_top (
+module nanospc_top (
     input sys_clk,
     input s1,                       // s1 for next song
     input s2,                       // s2 for previous song
@@ -115,10 +115,6 @@ reg char_valid;
 wire snd_rdy /*verilator public*/;
 wire [15:0] audio_l /*verilator public*/, 
             audio_r /*verilator public*/;
-
-//always @(posedge fclk) begin        // wait until memory initialize to start SNES
-//    if (~sdram_busy) start <= 1'b1;
-//end
 
 SMP smp(
     .CLK(dclk), .RST_N(resetn & ~spc_reset), .ENABLE(spc_ready & smp_en & last_phase),
@@ -316,27 +312,6 @@ wire lvl5 = level_lr[8:4] >= 5'd10;
 
 // assign led = ~{lvl5, lvl4, lvl3, lvl2, lvl1, lvl0};
 assign led = s2 ? ~loader_debug : ~{lvl5, lvl4, lvl3, lvl2, lvl1, lvl0};
-
-// assign led = ~{cnt[23], audio_l[15:11] };
-
-//
-// Print control
-//
-/*
-`include "print.v"
-localparam BAUDRATE=115200;
-
-defparam tx.uart_freq=BAUDRATE;
-defparam tx.clk_freq=24_750_000;
-assign print_clk = dclk;
-assign UART_TXD = uart_txp;
-
-always @(posedge dclk) begin
-    // if (cnt == 8'd200) begin
-        // `print({res[0], res[1]}, 2);
-    // end
-end
-*/
 
 `endif
 
