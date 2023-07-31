@@ -3,9 +3,9 @@
 #include <limits.h>
 #include <string.h>
 
-#include "Vspcplayer_top.h"
-#include "Vspcplayer_top_spcplayer_top.h"
-#include "Vspcplayer_top_DSP.h"
+#include "Vnanospc_top.h"
+#include "Vnanospc_top_nanospc_top.h"
+#include "Vnanospc_top_DSP.h"
 #include "verilated.h"
 #include <verilated_vcd_c.h>
 
@@ -23,7 +23,7 @@ bool trace;
 
 int main(int argc, char** argv, char** env) {
 	Verilated::commandArgs(argc, argv);
-	Vspcplayer_top* top = new Vspcplayer_top;
+	Vnanospc_top* top = new Vnanospc_top;
 
 	// parse options
 	for (int i = 1; i < argc; i++) {
@@ -62,10 +62,10 @@ int main(int argc, char** argv, char** env) {
 		top->eval(); 
 
 		// collect audio sample
-		if (~sys_clk_r && top->sys_clk && top->spcplayer_top->snd_rdy) {
+		if (~sys_clk_r && top->sys_clk && top->nanospc_top->snd_rdy) {
 			short ar, al;
-			ar = top->spcplayer_top->audio_r;
-			al = top->spcplayer_top->audio_l;			
+			ar = top->nanospc_top->audio_r;
+			al = top->nanospc_top->audio_l;			
 			fwrite(&ar, sizeof(ar), 1, f);
 			fwrite(&al, sizeof(al), 1, f);
 			samples ++;
@@ -77,7 +77,7 @@ int main(int argc, char** argv, char** env) {
 		if (trace)
 			m_trace->dump(sim_time);
 
-		int env = top->spcplayer_top->dsp->TENVX;		// envelope value
+		int env = top->nanospc_top->dsp->TENVX;		// envelope value
 		if (env != 0 && env != env_r) {
 			// printf("T=%lu, ENV=%d\n", sim_time, env);
 			env_r = env;

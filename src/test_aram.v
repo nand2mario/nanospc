@@ -42,16 +42,18 @@ end
 // Setting meta-data
 always @(posedge clk) begin
     reg isDigit = din >= 8'h30 && din <= 8'h39;
+    /* verilator lint_off WIDTH */
     if (write) begin
         if (addr == 17'ha9)
             int_length <= {8'h0, din-8'h30};
         else if ((addr == 17'haa || addr == 17'hab) && isDigit)
-            int_length <= (int_length << 3) + (int_length << 1) + (din - 8'h30);
+            int_length <= (int_length << 3) + (int_length << 1) + (din - 16'h30);
         else if (addr == 17'hac)
             int_fade <= {8'h0, din-8'h30};
         else if ((addr == 17'had || addr == 17'hae) && isDigit)
             int_fade <= (int_fade << 3) + (int_fade << 1) + (din - 8'h30);
     end
+    /* verilator lint_on WIDTH */
 end
 
 endmodule

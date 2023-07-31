@@ -1,7 +1,7 @@
 
-N=spcplayer_top
+N=nanospc_top
 D=../src
-SRCS=$D/dsp.v $D/spcplayer_top.v $D/smp.v $D/test_aram.v $D/test_loader.v $D/spc700/_spc700_package.v $D/spc700/addrgen.v $D/spc700/addsub.v $D/spc700/alu.v $D/spc700/bcdadj.v $D/spc700/mcode.v $D/spc700/muldiv.v $D/spc700/spc700.v 
+SRCS=$D/dsp.v $D/nanospc_top.v $D/smp.v $D/test_aram.v $D/spc_parser.v $D/spc700/_spc700_package.v $D/spc700/addrgen.v $D/spc700/addsub.v $D/spc700/alu.v $D/spc700/bcdadj.v $D/spc700/mcode.v $D/spc700/muldiv.v $D/spc700/spc700.v 
 INCLUDES=-I$D -I$D/spc700
 CFLAGS=
 LIBS=

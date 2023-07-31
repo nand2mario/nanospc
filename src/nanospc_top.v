@@ -164,8 +164,8 @@ reg [5:0] second, minute, ticks;
 reg [15:0] played;      // in seconds
 wire [7:0] second_bcd, minute_bcd, song_bcd, total_bcd;
 
-bin2bcd b0 (.bin(second), .bcd(second_bcd));
-bin2bcd b1 (.bin(minute), .bcd(minute_bcd));
+bin2bcd b0 (.bin(7'(second)), .bcd(second_bcd));
+bin2bcd b1 (.bin(7'(minute)), .bcd(minute_bcd));
 bin2bcd b2 (.bin(song[6:0]+1), .bcd(song_bcd));
 bin2bcd b3 (.bin(total[6:0]), .bcd(total_bcd));
 
@@ -224,18 +224,18 @@ always @(posedge dclk) begin
             if (cnt[3] && cnt[7:4] < 13) begin
                 char_valid <= 1;        // valid for 8 cycles
                 char_y <= 8;
-                char_x <= 19 + cnt[7:4];
+                char_x <= 19 + 8'(cnt[7:4]);
                 case (cnt[7:4])
-                0: char <= song_bcd[7:4] + 48;    // convert to ASCII
-                1: char <= song_bcd[3:0] + 48;
-                2: char <= "/";
-                3: char <= total_bcd[7:4] + 48;
-                4: char <= total_bcd[3:0] + 48;
-                8: char <= minute_bcd[7:4] + 48;
-                9: char <= minute_bcd[3:0] + 48;
-                10: char <= ":";
-                11: char <= second_bcd[7:4] + 48;
-                12: char <= second_bcd[3:0] + 48;
+                0: char <= {3'h3, song_bcd[7:4]};    // convert to ASCII
+                1: char <= {3'h3, song_bcd[3:0]};
+                2: char <= 7'("/");
+                3: char <= {3'h3, total_bcd[7:4]};
+                4: char <= {3'h3, total_bcd[3:0]};
+                8: char <= {3'h3, minute_bcd[7:4]};
+                9: char <= {3'h3, minute_bcd[3:0]};
+                10: char <= 7'(":");
+                11: char <= {3'h3, second_bcd[7:4]};
+                12: char <= {3'h3, second_bcd[3:0]};
                 default: char <= 0;
                 endcase
             end
@@ -255,8 +255,10 @@ always @(posedge dclk) begin
         played <= 0;
         ticks <= 0;
     end else begin
+/* verilator lint_off WIDTH */        
         if (tick_count == FREQ/10 - 1) begin
-            tick_count = 0;
+/* verilator lint_on WIDTH */            
+            tick_count <= 0;
             if (ticks == 9) begin
                 ticks <= 0;
                 played <= played + 1;
